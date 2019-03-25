@@ -25,7 +25,7 @@ int main() {
 	start = std::chrono::system_clock::now();
 	matrix<int> mat1(init1);
 	end = std::chrono::system_clock::now(); 
-	elapsed_seconds = start - end; 
+	elapsed_seconds = end - start; 
 	std::cout << "Test 1 completed. Time elapsed: " << elapsed_seconds.count() << std::endl;
 
 
@@ -56,7 +56,7 @@ int main() {
 	start = std::chrono::system_clock::now();
 	matrix<int> matSum = mat2 + mat3;
 	end = std::chrono::system_clock::now();
-	elapsed_seconds = start - end;
+	elapsed_seconds = end - start;
 	std::cout << "Test 2 completed. Time elapsed: " << elapsed_seconds.count() << std::endl; 
 
 
@@ -81,7 +81,7 @@ int main() {
 	mat4 *= scalar1;
 	end = std::chrono::system_clock::now();
 
-	elapsed_seconds = start - end;
+	elapsed_seconds = end - start;
 	std::cout << "Test 3 completed. Time elapsed: " << elapsed_seconds.count() << std::endl; 
 
 
@@ -112,13 +112,13 @@ int main() {
 											 {1,3,5,2,1},
 											 {1,6,5,2,1}};
 
-	matrix mat5(init5);
-	matrix mat5(init6);
+	matrix<int> mat5(init5);
+	matrix<int> mat6(init6);
 
 	start = std::chrono::system_clock::now();
-
+	matrix<int> resMat1 = mat5 * mat6;
 	end = std::chrono::system_clock::now();
-	elapsed_seconds = start - end;
+	elapsed_seconds = end - start;
 	std::cout << "Test 4 completed. Time elapsed: " << elapsed_seconds.count() << std::endl; 
 
 
@@ -195,14 +195,14 @@ int main() {
 											 {1,3,5,2,1,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5},
 											 {1,6,5,2,1,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5}};
 
-	matrix mat5(init7);
-	matrix mat5(init8);
-	matrix mat5(init9);
+	matrix<int> mat7(init7);
+	matrix<int> mat8(init8);
+	matrix<int> mat9(init9);
 
 	start = std::chrono::system_clock::now();
-
+	matrix<int> resMat2 = (mat7 * mat8) * mat9; 
 	end = std::chrono::system_clock::now();
-	elapsed_seconds = start - end;
+	elapsed_seconds = end - start;
 	std::cout << "Test 5 completed. Time elapsed: " << elapsed_seconds.count() << std::endl; 
 
 
@@ -336,22 +336,24 @@ int main() {
 											 {1,3,5,2,1,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,3,5,2,1,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5},
 											 {1,6,5,2,1,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,6,5,2,1,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5}};
 
-	matrix mat10(init10);
-	matrix mat11(init11);
-	matrix mat12(init12);
+	matrix<int> mat10(init10);
+	matrix<int> mat11(init11);
+	matrix<int> mat12(init12);
 
-	scalar2 = 1;
-	scalar3 = 2;
-	scalar4 = 3; 
+	int scalar2 = 1;
+	int scalar3 = 2;
+	int scalar4 = 3; 
 
 	start = std::chrono::system_clock::now();
 	mat10 *= scalar2; 
 	mat11 *= scalar3;
 	mat12 *= scalar4;
-	end = std::chrono::system_clock::now();
-	elapsed_seconds = start - end;
-	std::cout << "Test 6 completed. Time elapsed: " << elapsed_seconds.count() << std::endl; 
 
+	matrix<int> resMat3 = (mat10 * mat11) * mat12;
+	end = std::chrono::system_clock::now();
+	elapsed_seconds = end - start;
+	std::cout << "Test 6 completed. Time elapsed: " << elapsed_seconds.count() << std::endl; 
+	
 
 
 
