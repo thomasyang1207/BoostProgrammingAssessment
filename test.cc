@@ -10,9 +10,21 @@ int main() {
 	std::chrono::duration<double> elapsed_seconds;
 
 
+	//Correctness test
 
+	std::vector<std::vector<int>> init0a = 	{{1,2,3},
+											 {5,4,3},
+											 {0,0,0}};
 
+	std::vector<std::vector<int>> init0b = 	{{2,0,0},
+											 {0,2,0},
+											 {0,0,2}};
 
+	matrix<int> mat0a(init0a);
+	matrix<int> mat0b(init0b);
+
+	matrix<int> res0 = mat0a * mat0b;
+	res0.disp();
 
 
 
@@ -212,7 +224,7 @@ int main() {
 
 
 
-	// test 6 - linear combination of multiplications
+	// test 6 - scalar/matrix mix of multiplications
 	std::vector<std::vector<int>> init10 = 	{{1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5},
 											 {5,4,3,2,1,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,5,4,3,2,1,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5},
 											 {0,0,0,0,0,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,0,0,0,0,0,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5},

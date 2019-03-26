@@ -1,6 +1,8 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
+#include <stdexcept>
+#include <iostream>
 
 template <typename T>
 class matrix {
@@ -24,6 +26,8 @@ class matrix {
 
 		T & getElement(size_t i, size_t j) const;
 		void setElement(size_t i, size_t j, T val);
+
+		void disp() const; 
 
 	private:
 		size_t m;
@@ -73,6 +77,9 @@ matrix<T> & matrix<T>::operator = (const matrix<T>& mat){
 
 template <typename T>
 matrix<T> matrix<T>::operator + (const matrix<T> & mat) const{
+	if(mat.n != this->n || mat.m != this->m)
+		throw std::length_error("Error in matrix.h: dimensions of matrices do not match");
+
 	matrix<T> outputMat(*this);
 	std::transform(outputMat.mat_.begin(),outputMat.mat_.end(), mat.mat_.begin(), outputMat.mat_.begin(), std::plus<T>());
 	return outputMat;
@@ -80,12 +87,18 @@ matrix<T> matrix<T>::operator + (const matrix<T> & mat) const{
 
 template <typename T>
 matrix<T> & matrix<T>::operator += (const matrix<T>& mat){
+	if(mat.n != this->n || mat.m != this->m)
+		throw std::length_error("Error in matrix.h: dimensions of matrices do not match");
+
 	std::transform(this->mat_.begin(),this->mat_.begin(), mat.mat_.begin(), this->mat_.begin(), std::plus<T>());
 	return *this;
 }
 
 template <typename T>
 matrix<T> matrix<T>::operator - (const matrix<T> & mat) const{
+	if(mat.n != this->n || mat.m != this->m)
+		throw std::length_error("Error in matrix.h: dimensions of matrices do not match");
+
 	matrix<T> outputMat(*this);
 	std::transform(outputMat.mat_.begin(),outputMat.mat_.end(), mat.mat_.begin(), outputMat.mat_.begin(), std::minus<T>());
 	return outputMat;
@@ -93,12 +106,16 @@ matrix<T> matrix<T>::operator - (const matrix<T> & mat) const{
 
 template <typename T>
 matrix<T> & matrix<T>::operator -= (const matrix<T> & mat){
+	if(mat.n != this->n || mat.m != this->m)
+		throw std::length_error("Error in matrix.h: dimensions of matrices do not match");
+
 	std::transform(this->mat_.begin(),this->mat_.begin(), mat.mat_.begin(), this->mat_.begin(), std::plus<T>());
 	return *this;
 }
 
 template <typename T>
 matrix<T> & matrix<T>::operator *= (T scalar){
+
 	std::transform(this->mat_.begin(),this->mat_.end(), this->mat_.begin(), [scalar](T& c){return c * scalar;});
 	return *this;
 }
@@ -123,7 +140,8 @@ void matrix<T>::setElement(size_t i, size_t j, T val){
 template <typename T>
 matrix<T> matrix<T>::operator * (const matrix<T>& mat) const{
 	//check for dimension mismatch... 
-
+	if(mat.m != this->n)
+		throw std::length_error("Error in matrix.h: Inner dimension mismatch");
 	//get correct dimensions
 	auto newM = this->m; 
 	auto newN = mat.n;
@@ -142,6 +160,18 @@ matrix<T> matrix<T>::operator * (const matrix<T>& mat) const{
 	}
 
 	return resMat;
+}
+
+
+template <typename T>
+void matrix<T>::disp() const{
+	for(size_t i = 0; i < m; i++){
+		for(size_t j = 0; j < n; j++){
+			std::cout << mat_[i*n + j] << " ";
+		}
+
+		std::cout << std::endl;
+	}
 }
 
 
