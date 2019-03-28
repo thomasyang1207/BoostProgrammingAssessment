@@ -1,5 +1,4 @@
 #include "matrix.h"
-
 #include <iostream>
 #include <chrono>
 #include <complex>
@@ -22,7 +21,6 @@ int main() {
 
 	matrix<int> mat0a(init0a);
 	matrix<int> mat0b(init0b);
-
 	matrix<int> res0 = mat0a * mat0b;
 	res0.disp();
 
@@ -212,10 +210,10 @@ int main() {
 	matrix<int> mat9(init9);
 
 	start = std::chrono::system_clock::now();
-	matrix<int> resMat2 = (mat7 * mat8) * mat9; 
+	matrix<int> resMat2 = mat7 * mat8 * mat9;
 	end = std::chrono::system_clock::now();
 	elapsed_seconds = end - start;
-	std::cout << "Test 5 completed. Time elapsed: " << elapsed_seconds.count() << std::endl; 
+	std::cout << "Test 5 completed. Time elapsed: " << elapsed_seconds.count() << std::endl;
 
 
 
@@ -361,19 +359,10 @@ int main() {
 	mat11 *= scalar3;
 	mat12 *= scalar4;
 
-	matrix<int> resMat3 = (mat10 * mat11) * mat12;
+	matrix<int> resMat3 = mat10 * mat11 * mat12;
 	end = std::chrono::system_clock::now();
 	elapsed_seconds = end - start;
 	std::cout << "Test 6 completed. Time elapsed: " << elapsed_seconds.count() << std::endl; 
-	
-
-
-
-
-
-
-
-	//Test 7 - stress testing (to be implemented)
 
 	return 0;
 }
