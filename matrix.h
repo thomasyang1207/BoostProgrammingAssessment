@@ -73,41 +73,6 @@ class matrix : public matrixExpression<matrix<T>, T>{
 			return *this;
 		}
 
-		template <typename E>
-		matrix & operator += (const matrixExpression<E, T> & mat) { 
-			if(mat.ncol() != this->n || mat.nrow() != this->m)
-				throw std::length_error("Error in matrix.h: dimensions of matrices do not match");
-			for(size_t i = 0; i < m; i++){
-				for (size_t j = 0; j < n; j++){
-					mat_[i*n + j] += mat(i,j);
-				}
-			}
-			return *this;
-		}
-
-		template <typename E>
-		matrix & operator -= (const matrixExpression<E, T> & mat) {
-			if(mat.ncol() != this->n || mat.nrow() != this->m)
-				throw std::length_error("Error in matrix.h: dimensions of matrices do not match");
-
-			for(size_t i = 0; i < m; i++){
-				for (size_t j = 0; j < n; j++){
-					mat_[i*n + j] -= mat(i,j);
-				}
-			}
-			return *this;
-		}
-
-		matrix & operator *= (T scalar) { 
-			for(size_t i = 0; i < m*n; i++) mat_[i] *= scalar; 
-			return *this;
-		}
-
-		matrix & operator /= (T scalar) { 
-			for(size_t i = 0; i < m*n; i++) mat_[i] /= scalar;
-				return *this;
-		}
-
 		void disp() const {
 			for(size_t i = 0; i < m; i++){
 				for(size_t j = 0; j < n; j++){
@@ -165,6 +130,21 @@ class matrixProd : public matrixExpression <matrixProd<E1, E2, T> ,T> {
 };
 
 
+template <typename E1, typename T>
+class matrixScalar : public matrixExpression <matrixScalar<E1, T> ,T> {
+	const matrixExpression<E1, T> & mat1;
+	const T & sclr;
+
+	std::function<T(T,T)> op;
+	public:
+		matrixScalar(const matrixExpression<E1, T> & m1, const T & s, std::function<T(T,T)> op_) : mat1(m1), sclr(s), op(op_) {}
+		T operator() (size_t i, size_t j) const {return op(mat1(i,j), sclr);}
+		size_t nrow() const {return this->mat1.nrow();}
+		size_t ncol() const {return this->mat1.ncol();}
+
+};
+
+
 
 
 template <typename E1, typename E2, typename T>
@@ -183,12 +163,82 @@ matrixBinOp<E1, E2, T> operator - (const matrixExpression<E1, T> & mat1, const m
 	return matrixBinOp<E1, E2, T>(mat1, mat2, std::minus<T>());
 }
 
+template <typename E1, typename E2, typename T>
+matrix<T> & operator += (matrix<T> & mat1, const matrixExpression<E2, T> & mat2) {
+	if(mat2.ncol() != mat1.ncol() || mat2.nrow() != mat1.nrow())
+		throw std::length_error("Error in matrix.h: dimensions of matrices do not match");
+
+	size_t m = mat1.nrow();
+	size_t n = mat1.ncol();
+
+	for(size_t i = 0; i < m; i++){
+		for (size_t j = 0; j < n; j++){
+			mat1(i,j) += mat2(i,j);
+		}
+	}
+}
+
+template <typename E1, typename E2, typename T>
+matrix<T> & operator -= (matrix<T> & mat1, const matrixExpression<E2, T> & mat2) {
+	if(mat2.ncol() != mat1.ncol() || mat2.nrow() != mat1.nrow())
+		throw std::length_error("Error in matrix.h: dimensions of matrices do not match");
+
+	size_t m = mat1.nrow();
+	size_t n = mat1.ncol();
+
+	for(size_t i = 0; i < m; i++){
+		for (size_t j = 0; j < n; j++){
+			mat1(i,j) += mat2(i,j);
+		}
+	}
+}
+
+template <typename T>
+matrix<T> & operator *= (matrix<T> & mat1, T scalar) {
+	size_t m = mat1.nrow();
+	size_t n = mat1.ncol();
+
+	for(size_t i = 0; i < m; i++){
+		for (size_t j = 0; j < n; j++){
+			mat1(i,j) *= scalar;
+		}
+	}
+}
+
+template <typename T>
+matrix<T> & operator /= (matrix<T> & mat1, T scalar) {
+	size_t m = mat1.nrow();
+	size_t n = mat1.ncol();
+
+	for(size_t i = 0; i < m; i++){
+		for (size_t j = 0; j < n; j++){
+			mat1(i,j) /= scalar;
+		}
+	}
+}
+
+template <typename E1, typename T>
+matrixScalar<E1, T> operator / (const matrixExpression<E1, T> & mat1, const T& scalar) {
+	return matrixScalar<E1, T>(mat1, scalar, std::divides<T>()); 
+}
+
+template <typename E1, typename T>
+matrixScalar<E1, T> operator * (const matrixExpression<E1, T> & mat1, const T& scalar) {
+	return matrixScalar<E1, T>(mat1, scalar, std::multiplies<T>());
+}
+
+template <typename E1, typename T>
+matrixScalar<E1, T> operator *  (const T& scalar ,const matrixExpression<E1, T> & mat1) {
+
+	return matrixScalar<E1, T>(mat1, scalar, std::multiplies<T>()); 
+}
 
 
+// Matrix product
 template <typename E1, typename E2, typename T>
 matrixProd<E1, E2, T> operator * (const matrixExpression<E1, T> & mat1, const matrixExpression<E2, T> & mat2) {
 	if(mat2.nrow() != mat1.ncol())
-		throw std::length_error("Error in matrix.h: dimensions of matrices do not match");
+		throw std::length_error("Error in matrix.h: Inner dimensions of matrices do not match");
 
 	return matrixProd<E1, E2, T>(mat1, mat2); 
 }
