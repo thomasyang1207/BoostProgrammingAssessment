@@ -21,8 +21,8 @@ int main() {
 
 	matrix<int> mat0a(init0a);
 	matrix<int> mat0b(init0b);
-	matrix<int> res0 = mat0a * mat0b;
-	res0.disp();
+	matrix<int> res0 = mat0a * mat0b * 4 / 2;
+	std::cout << res0 << std::endl;
 
 
 

@@ -73,15 +73,6 @@ class matrix : public matrixExpression<matrix<T>, T>{
 			return *this;
 		}
 
-		void disp() const {
-			for(size_t i = 0; i < m; i++){
-				for(size_t j = 0; j < n; j++){
-					std::cout << mat_[i*n + j] << " ";
-				}
-				std::cout << std::endl;
-			}
-		}
-
 	private:
 		size_t m;
 		size_t n;
@@ -145,7 +136,20 @@ class matrixScalar : public matrixExpression <matrixScalar<E1, T> ,T> {
 };
 
 
+template <typename E1, typename T>
+std::ostream& operator<<(std::ostream& os, const matrixExpression<E1, T> & mat1) {
+	size_t m = mat1.nrow();
+	size_t n = mat1.ncol();
 
+	for(size_t i = 0; i < m; i++){
+		for(size_t j = 0; j < n; j++){
+			os << mat1(i,j) << " ";
+		}
+		os << std::endl;
+	}
+
+	return os;
+}
 
 template <typename E1, typename E2, typename T>
 matrixBinOp<E1, E2, T> operator + (const matrixExpression<E1, T> & mat1, const matrixExpression<E2, T> & mat2) {
